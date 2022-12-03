@@ -68,3 +68,8 @@ h1 {
 .castell h3 span {
 	font-size: 0.75em;
 }
+
+hr {
+	border-color: var(--theme);
+	width: 30%;
+}

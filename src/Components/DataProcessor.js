@@ -34,7 +34,7 @@ function DataProcessor(props) {
             diades_dict[diada_hash]["castells"].forEach((castell, i) => {
                 const resultat = castell["resolució"];
                 const ordre = castell["ordre"];
-                if (castell["pinya"].includes("n") || resultat.includes("pd") || resultat.includes("i")) {
+                if (resultat.includes("pd") || resultat.includes("i")) {
                     delete diades_dict[diada_hash]["castells"][i];
                     return;
                 }
@@ -42,8 +42,8 @@ function DataProcessor(props) {
                 const perSota = castell["altres"] === "ps" ? "s" : "";
                 const caminant = castell["altres"] === "cam" ? "cam" : "";
                 const fix4d8 = castell["tipus"].toUpperCase() + "d" + castell["alçada"] === "4d8" && castell["pinya"] === "" ? "sf" : "";
-                const build = castell["tipus"].toUpperCase() + "d" + castell["alçada"] + castell["pinya"] + perSota + fix4d8 + agulla + caminant;
-                if (build === "Pd5f") console.log(diada_hash)
+                const build = castell["tipus"].toUpperCase() + "d" + castell["alçada"] + perSota + agulla + castell["pinya"] + fix4d8 + caminant;
+                //if (build === "Pd5f") console.log(diada_hash)
                 diades_dict[diada_hash]["castells"][i] = {};
                 diades_dict[diada_hash]["castells"][i][ordre] = build + resultat.toUpperCase();
             });

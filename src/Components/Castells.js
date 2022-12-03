@@ -18,7 +18,7 @@ function Castells(props) {
 				if (!(cas in not_scored_castells))
 					not_scored_castells[cas] = 0;
 				not_scored_castells[cas] += 1;
-				return;
+				//return;
 			}
 
 			if (!(cas in castells_dict))
@@ -34,8 +34,20 @@ function Castells(props) {
 		return [key, castells_dict[key]];
 	});
 	castells.sort(function(a, b) {
-		const scoreA = puntuacions[a[0].replace('T','2')];
-		const scoreB = puntuacions[b[0].replace('T','2')];
+		let scoreA = puntuacions[a[0].replace('T','2')];
+		let scoreB = puntuacions[b[0].replace('T','2')];
+
+		if (scoreA === undefined) {
+			const structure = parseInt(a[0].split('d')[0].replace('T','2').replace('P','1'));
+			const floors = parseInt(a[0].split('d')[1]);
+			scoreA = 10 * structure + floors;
+		}
+		if (scoreB === undefined) {
+			const structure = parseInt(b[0].split('d')[0].replace('T','2').replace('P','1'));
+			const floors = parseInt(b[0].split('d')[1]);
+			scoreB = 10 * structure + floors;
+		}
+
 		return scoreB - scoreA;
 	});
 
@@ -45,6 +57,33 @@ function Castells(props) {
 			<div className="wrap">
 			{
 				castells.map(castell => {
+					let html;
+					if (castell[1][0] === 0)
+						html = <h3><span>{castell[1][1]}c</span></h3>;
+					else if (castell[1][1] === 0)
+						html = <h3>{castell[1][0]}</h3>;
+					else
+						html = <h3>{castell[1][0]}<span> + {castell[1][1]}c</span></h3>;
+					
+					if (!(castell[0].replace('T','2') in puntuacions))
+						return;
+					
+					return (
+						<div className="castell">
+							<h2>{castell[0]}</h2>
+							{html}
+						</div>
+					);
+				})
+			}
+			</div>
+			<hr/>
+			<div className="wrap">
+			{
+				castells.map(castell => {
+					if (castell[0].replace('T','2') in puntuacions)
+						return;
+					
 					let html;
 					if (castell[1][0] === 0)
 						html = <h3><span>{castell[1][1]}c</span></h3>;
