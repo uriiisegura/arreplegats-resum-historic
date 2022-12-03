@@ -16,9 +16,11 @@ function Castells(props) {
 
 			if (!(cas.replace('T','2') in puntuacions)) {
 				if (!(cas in not_scored_castells))
-					not_scored_castells[cas] = 0;
-				not_scored_castells[cas] += 1;
-				//return;
+					not_scored_castells[cas] = [0, 0];
+				
+				if (des)	not_scored_castells[cas][0] += 1;
+				else		not_scored_castells[cas][1] += 1;
+				return;
 			}
 
 			if (!(cas in castells_dict))
@@ -28,7 +30,6 @@ function Castells(props) {
 			else		castells_dict[cas][1] += 1;
 		})
 	});
-	console.log(not_scored_castells)
 
 	const castells = Object.keys(castells_dict).map(function(key) {
 		return [key, castells_dict[key]];
@@ -51,6 +52,21 @@ function Castells(props) {
 		return scoreB - scoreA;
 	});
 
+	const castells_no_puntuats = Object.keys(not_scored_castells).map(function(key) {
+		return [key, not_scored_castells[key]];
+	});
+	castells_no_puntuats.sort(function(a, b) {
+		const structureA = parseInt(a[0].split('d')[0].replace('T','2').replace('P','1'));
+		const floorsA = parseInt(a[0].split('d')[1]);
+		const scoreA = 10 * structureA + floorsA;
+
+		const structureB = parseInt(b[0].split('d')[0].replace('T','2').replace('P','1'));
+		const floorsB = parseInt(b[0].split('d')[1]);
+		const scoreB = 10 * structureB + floorsB;
+
+		return scoreB - scoreA;
+	});
+
 	return (
 		<div id="castells">
 			<h1>Resum històric</h1>
@@ -65,9 +81,6 @@ function Castells(props) {
 					else
 						html = <h3>{castell[1][0]}<span> + {castell[1][1]}c</span></h3>;
 					
-					if (!(castell[0].replace('T','2') in puntuacions))
-						return;
-					
 					return (
 						<div className="castell">
 							<h2>{castell[0]}</h2>
@@ -80,10 +93,7 @@ function Castells(props) {
 			<hr/>
 			<div className="wrap">
 			{
-				castells.map(castell => {
-					if (castell[0].replace('T','2') in puntuacions)
-						return;
-					
+				castells_no_puntuats.map(castell => {
 					let html;
 					if (castell[1][0] === 0)
 						html = <h3><span>{castell[1][1]}c</span></h3>;
