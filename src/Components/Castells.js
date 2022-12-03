@@ -7,6 +7,7 @@ function Castells(props) {
 		return [castell, true];
 	};
 
+	const not_scored_castells = {};
 	const castells_dict = {};
 	[...Object.values(diades)].forEach(diada => {
 		diada["castells"].forEach(dict => {
@@ -14,7 +15,9 @@ function Castells(props) {
 			const [cas, des] = getCastell(castell);
 
 			if (!(cas.replace('T','2') in puntuacions)) {
-				console.log(cas);
+				if (!(cas in not_scored_castells))
+					not_scored_castells[cas] = 0;
+				not_scored_castells[cas] += 1;
 				return;
 			}
 
@@ -25,6 +28,7 @@ function Castells(props) {
 			else		castells_dict[cas][1] += 1;
 		})
 	});
+	console.log(not_scored_castells)
 
 	const castells = Object.keys(castells_dict).map(function(key) {
 		return [key, castells_dict[key]];
