@@ -3,7 +3,7 @@ import * as Papa from 'papaparse';
 
 function DataProcessor(props) {
     const { setCastells, setPuntuacions } = props;
-    const CASTELLS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQeAif6pgFuLUAXHif4IsrSXzG8itYhirTHGdmNzA5RmrEPcJe7lcfwfNVLBEcgnn3mZbThqaZdouiP/pub?gid=1678902832&single=true&output=csv";
+    const CASTELLS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRzvM_JNeX_MUNi4ZarVZDcj5CdyrDBTPbf3lDUrvUs_HvaX3S0k07yLmJKolAPf0BA6iM1FW4w1u83/pub?gid=0&single=true&output=csv";
     const SCORE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQeAif6pgFuLUAXHif4IsrSXzG8itYhirTHGdmNzA5RmrEPcJe7lcfwfNVLBEcgnn3mZbThqaZdouiP/pub?gid=1401475200&single=true&output=csv";
 
     const get_data = (link, callback) => Papa.parse(link, {
@@ -32,11 +32,14 @@ function DataProcessor(props) {
             
             diades_dict[diada_hash]["castells"] = by_diada.map(castell => (({ tipus, alçada, agulla, pinya, altres, ordre, resolució }) => ({ tipus, alçada, agulla, pinya, altres, ordre, resolució }))(castell));
             diades_dict[diada_hash]["castells"].forEach((castell, i) => {
-                const resultat = castell["resolució"];
+                let resultat = castell["resolució"];
                 const ordre = castell["ordre"];
+                let resultatDavant = "";
                 if (resultat.includes("pd") || resultat.includes("i")) {
-                    delete diades_dict[diada_hash]["castells"][i];
-                    return;
+                    resultatDavant = resultat;
+                    resultat = "";
+                    //delete diades_dict[diada_hash]["castells"][i];
+                    //return;
                 }
                 const agulla = castell["agulla"] === "1" ? "a" : "";
                 const perSota = castell["altres"] === "ps" ? "s" : "";
@@ -45,7 +48,7 @@ function DataProcessor(props) {
                 const build = castell["tipus"].toUpperCase() + "d" + castell["alçada"] + perSota + agulla + castell["pinya"] + fix4d8 + caminant;
                 //if (build === "Pd5f") console.log(diada_hash)
                 diades_dict[diada_hash]["castells"][i] = {};
-                diades_dict[diada_hash]["castells"][i][ordre] = build + resultat.toUpperCase();
+                diades_dict[diada_hash]["castells"][i][ordre] = resultatDavant + build + resultat.toUpperCase();
             });
             diades_dict[diada_hash]["info"]["data"] = parseDate(diades_dict[diada_hash]["info"]);
             delete diades_dict[diada_hash]["info"]["dia"];
@@ -61,6 +64,11 @@ function DataProcessor(props) {
         data.forEach(castell => {
             puntuacions_dict[castell.castell] = parseInt(castell["Descarregat"]);
         });
+        puntuacions_dict["Pd3cam"] = 14;
+        puntuacions_dict["Pd4cam"] = 119;
+        puntuacions_dict["Vd5"] = 571;
+        puntuacions_dict["Vd6f"] = 1911;
+        puntuacions_dict["3d7+4d7"] = 2301;
 
         return puntuacions_dict;
     };
