@@ -66,6 +66,6 @@ html, body {
 
 #castells hr {
 	border-color: var(--theme);
-	width: 100%;
+	width: 75%;
 	margin-bottom: 60px;
 }
