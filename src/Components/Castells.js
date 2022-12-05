@@ -180,7 +180,6 @@ function Castells(props) {
 
 	return (
 		<div id="castells">
-			<h1>Resum històric</h1>
 			<div className="wrap">
 			{
 				castells.map(castell => {
