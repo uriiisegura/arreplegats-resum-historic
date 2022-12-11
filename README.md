@@ -1,4 +1,4 @@
-# Arreplegats de la Zona Universitària
+# Arreplegats de la Zona Universitària | Resum històric
 
 ## Com funciona?
 És una App feta en React, per tant, haurem de tenir el `npm` instal·lat.
